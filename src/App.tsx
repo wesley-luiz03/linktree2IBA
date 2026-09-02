@@ -84,9 +84,9 @@ const LINKS = [
         url: "https://docs.google.com/forms/d/e/1FAIpQLSerPHXRdAAcmxYnNkPg2VuuhvvC1TytmourKv7SUOXMdI6VTg/viewform?fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAacHiQAhi6SQn5BhNrJv1u5F-ehJuJ842uKLxvRldS5eVKqmc3AYWq1bxdJt0w_aem_7eNS5RCA_tD3sV9W34BYgg" 
     },
     {
-        id: 21,
-        label: "DIA DE CONVIVÊNCIA",
-        url: "https://forms.gle/oV8dGTTehedTi6e26"
+        id: 22,
+        label: "CONFERÊNCIA ALCANCE",
+        url: "https://forms.gle/1viYhfictqJBvC918"
     }
 ];
 
