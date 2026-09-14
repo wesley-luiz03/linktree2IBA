@@ -85,8 +85,8 @@ const LINKS = [
     },
     {
         id: 22,
-        label: "CONFERÊNCIA ALCANCE",
-        url: "https://forms.gle/1viYhfictqJBvC918"
+        label: "RESENHA.COM",
+        url: "https://docs.google.com/forms/d/e/1FAIpQLScdfapJ8-pv0vkHDyIzwoUPDTQQxIm0DiQ7xws4-uxqrA5zfg/viewform"
     }
 ];
 
