@@ -1,5 +1,7 @@
+// App.tsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { Instagram, Youtube, MessageCircle, Heart } from 'lucide-react';
 import SmartFAQ from './components/SmartFAQ';
 
 const CONFIG = {
@@ -15,81 +17,6 @@ const CONFIG = {
     pixCopiaECola: "00020126440014br.gov.bcb.pix01141154736100017902042IBA5204000053039865802BR5906IGREJA6008BRASILIA62070503***63046C50"
 };
 
-const LINKS = [
-    { 
-        id: 11, 
-        label: "CALENDÁRIO 2026", 
-        url: "https://drive.google.com/file/d/1UoQiysgCKP-JDkbWWq8KWCxr6eF6yU1r/view?usp=drivesdk" 
-    },
-    { 
-        id: 12, 
-        label: "PEÇA SUA ORAÇÃO AQUI", 
-        url: "https://forms.gle/yYzAckRZxvS7gmVg9" 
-    },
-    { 
-        id: 13, 
-        label: "QUERO ME CONECTAR", 
-        url: "https://wa.me/558196611356?text=Olá,%20tudo%20bem%20?%20Quero%20me%20conectar,%20como%20faço%20?" 
-    },
-    { 
-        id: 6, 
-        label: "DÍZIMO E OFERTAS", 
-        url: "/dizimo"
-    },
-    { 
-        id: 10, 
-        label: "LOCALIZAÇÃO", 
-        url: "https://maps.app.goo.gl/D6UdhjJzaVzMdDxt5" 
-    },
-    { 
-        id: 1, 
-        label: "NOSSO CANAL DO YOUTUBE", 
-        url: "https://www.youtube.com/c/2aIgrejaBatistadeAreias" 
-    },
-    { 
-        id: 2, 
-        label: "NOSSO CANAL DO WHATSAPP", 
-        url: "https://www.whatsapp.com/channel/0029VaGtOo06BIEZeDmTCx3j?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnXBC4Hm7UlleTxgfAun_cuqtOcO4XtXOZSv10Fpf8r8_bi4xpgAByU_vYNlA_aem_fVUdOvmVck6Oh1eIzi8SHg" 
-    },
-    { 
-        id: 7, 
-        label: "PODCAST", 
-        url: "#",
-        status: "construção"
-    },
-    { 
-        id: 8, 
-        label: "TRILHO - JUVENTUDE 2IBA", 
-        url: "https://www.instagram.com/trilho2iba/?hl=pt-br" 
-    },
-    { 
-        id: 9, 
-        label: "2IBA EM MOVIMENTO - 2IBA MOVING", 
-        url: "https://www.instagram.com/2ibamoving/?hl=pt-br" 
-    },
-    { 
-        id: 15, 
-        label: "2ª IGREJA BATISTA DE AREIAS", 
-        url: "https://www.instagram.com/2iba_areias/" 
-    },
-    { 
-        id: 16, 
-        label: "BOLETIM DOMINICAL", 
-        url: "#",
-        status: "construção"
-    },
-    { 
-        id: 20, 
-        label: "🕷️ ACAMPATEENS 2026", 
-        url: "https://docs.google.com/forms/d/e/1FAIpQLSerPHXRdAAcmxYnNkPg2VuuhvvC1TytmourKv7SUOXMdI6VTg/viewform?fbclid=PAcGRvZgJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAacHiQAhi6SQn5BhNrJv1u5F-ehJuJ842uKLxvRldS5eVKqmc3AYWq1bxdJt0w_aem_7eNS5RCA_tD3sV9W34BYgg" 
-    },
-    {
-        id: 22,
-        label: "RESENHA.COM",
-        url: "https://docs.google.com/forms/d/e/1FAIpQLScdfapJ8-pv0vkHDyIzwoUPDTQQxIm0DiQ7xws4-uxqrA5zfg/viewform"
-    }
-];
-
 const LinkCard = ({ link, index, onClick }: { link: any, index: number, onClick: (path: string) => void }) => {
     const handleAction = (e: React.MouseEvent) => {
         if (link.url && link.url.startsWith('/')) {
@@ -101,7 +28,7 @@ const LinkCard = ({ link, index, onClick }: { link: any, index: number, onClick:
         }
     };
 
-    const isConstrucao = link.status === "construção";
+    const isConstrucao = link.status === "construção" || link.status === "construcao";
     
     const baseClasses = "relative flex items-center justify-center w-full py-4 px-6 rounded-full font-bold text-base uppercase tracking-wider transition-all duration-300 transform hover:scale-[1.02] active:scale-95 animate-fade-in-up opacity-0 animate-fill-forwards shadow-lg text-center border-2 border-brand-green";
     const styleClasses = "bg-white text-brand-green hover:bg-brand-green hover:text-white";
@@ -136,10 +63,41 @@ const MainApp: React.FC = () => {
     const [currentView, setCurrentView] = useState('main');
     const [copied, setCopied] = useState(false);
     const [copiedCopiaCola, setCopiedCopiaCola] = useState(false);
+    
+    const [links, setLinks] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchLinks = async () => {
+            const tsvUrl = `https://docs.google.com/spreadsheets/d/e/2PACX-1vTqkMO8HgVuAbtxBg_PakQxPDm_4mKugBtB1zDJOvOs3WC4eLBmF61J6AGNUey5MUWaJVrtK0DKP6e3/pub?output=tsv&t=${Date.now()}`; 
+            
+            try {
+                const response = await fetch(tsvUrl, { cache: "no-store" });
+                const data = await response.text();
+                
+                const rows = data.split('\n').map(row => row.trim()).filter(row => row);
+                
+                const parsedLinks = rows.slice(1).map(row => {
+                    const values = row.split('\t');
+                    return {
+                        id: values[0]?.trim(),
+                        label: values[1]?.trim(),
+                        url: values[2]?.trim(),
+                        status: values[3]?.trim() || undefined
+                    };
+                }).filter(link => link.label && link.url);
+                
+                setLinks(parsedLinks);
+            } catch (error) {
+                console.error("Erro ao carregar links da planilha:", error);
+            }
+        };
+
+        fetchLinks();
+    }, []);
 
     useEffect(() => {
         const handleRouting = () => {
-            const path = window.location.pathname.replace(/\/$/, ""); // Remove trailing slash
+            const path = window.location.pathname.replace(/\/\$/, "");
             if (path === '/dizimo' || path === '/dizimos') {
                 setCurrentView('generosidade');
             } else {
@@ -163,7 +121,7 @@ const MainApp: React.FC = () => {
     const navigateTo = (path: string) => {
         if (path.startsWith('/')) {
             window.history.pushState({}, '', path);
-            const cleanPath = path.replace(/\/$/, "");
+            const cleanPath = path.replace(/\/\$/, "");
             if (cleanPath === '/dizimo' || cleanPath === '/dizimos') {
                 setCurrentView('generosidade');
             } else {
@@ -188,7 +146,7 @@ const MainApp: React.FC = () => {
 
     const renderMainView = () => (
         <>
-            <header className="text-center mb-10 animate-fade-in-down w-full px-2 flex flex-col items-center">
+            <header className="text-center mb-6 animate-fade-in-down w-full px-2 flex flex-col items-center">
                 <div className="relative inline-block mb-8 group cursor-pointer">
                     <div className="absolute -inset-4 bg-brand-green rounded-full blur-2xl opacity-15 group-hover:opacity-25 transition duration-700"></div>
                     <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full border-4 border-brand-green bg-white shadow-2xl overflow-hidden p-0.5">
@@ -211,9 +169,60 @@ const MainApp: React.FC = () => {
                 </p>
             </header>
 
+            {/* Nova Seção de Ícones Sociais */}
+            <div className="flex flex-wrap justify-center gap-4 mb-10 w-full animate-fade-in-down px-4">
+                <a href="https://www.instagram.com/2ibareias/" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1 group">
+                    <div className="p-3 bg-white text-brand-green border-2 border-brand-green rounded-full group-hover:bg-brand-green group-hover:text-white transition-all shadow-sm">
+                        <Instagram size={22} />
+                    </div>
+                    <span className="text-[9px] font-bold text-brand-green uppercase tracking-wider">Oficial</span>
+                </a>
+                
+                <a href="https://www.instagram.com/2ibamoving/?hl=pt-br" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1 group">
+                    <div className="p-3 bg-white text-brand-green border-2 border-brand-green rounded-full group-hover:bg-brand-green group-hover:text-white transition-all shadow-sm">
+                        <Instagram size={22} />
+                    </div>
+                    <span className="text-[9px] font-bold text-brand-green uppercase tracking-wider">Moving</span>
+                </a>
+
+                <a href="https://www.instagram.com/trilho2iba/?hl=pt-br" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1 group">
+                    <div className="p-3 bg-white text-brand-green border-2 border-brand-green rounded-full group-hover:bg-brand-green group-hover:text-white transition-all shadow-sm">
+                        <Instagram size={22} />
+                    </div>
+                    <span className="text-[9px] font-bold text-brand-green uppercase tracking-wider">Trilho</span>
+                </a>
+
+                <a href="https://www.youtube.com/c/2aIgrejaBatistadeAreias" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1 group">
+                    <div className="p-3 bg-white text-brand-green border-2 border-brand-green rounded-full group-hover:bg-brand-green group-hover:text-white transition-all shadow-sm">
+                        <Youtube size={22} />
+                    </div>
+                    <span className="text-[9px] font-bold text-brand-green uppercase tracking-wider">YouTube</span>
+                </a>
+
+                <a href="https://www.whatsapp.com/channel/0029VaGtOo06BIEZeDmTCx3j?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnXBC4Hm7UlleTxgfAun_cuqtOcO4XtXOZSv10Fpf8r8_bi4xpgAByU_vYNlA_aem_fVUdOvmVck6Oh1eIzi8SHg" target="_blank" rel="noreferrer" className="flex flex-col items-center gap-1 group">
+                    <div className="p-3 bg-white text-brand-green border-2 border-brand-green rounded-full group-hover:bg-brand-green group-hover:text-white transition-all shadow-sm">
+                        <MessageCircle size={22} />
+                    </div>
+                    <span className="text-[9px] font-bold text-brand-green uppercase tracking-wider">Canal</span>
+                </a>
+            </div>
+
             <div className="w-full space-y-4 px-2">
-                {loaded && LINKS.map((link, i) => (
-                    <LinkCard key={link.id} link={link} index={i} onClick={(path) => navigateTo(path)} />
+                {/* Botão Fixo e Nativo para Dízimo e Ofertas */}
+                <button
+                    onClick={() => navigateTo('/dizimo')}
+                    className="relative flex items-center justify-center w-full py-4 px-6 mb-2 rounded-full font-bold text-base uppercase tracking-wider transition-all duration-300 transform hover:scale-[1.02] active:scale-95 animate-fade-in-up opacity-0 animate-fill-forwards shadow-lg text-center border-2 border-brand-green bg-brand-green text-white hover:bg-brand-green/90"
+                    style={{ animationDelay: '100ms' }}
+                >
+                    <div className="flex items-center gap-2">
+                        <Heart size={20} className="text-white" />
+                        <span>DÍZIMO E OFERTAS</span>
+                    </div>
+                </button>
+
+                {/* Renderização Dinâmica dos Links do Sheets */}
+                {loaded && links.map((link, i) => (
+                    <LinkCard key={link.id} link={link} index={i + 1} onClick={(path) => navigateTo(path)} />
                 ))}
             </div>
         </>
@@ -273,7 +282,7 @@ const MainApp: React.FC = () => {
         </div>
     );
 
-    return (
+return (
         <div className="min-h-[100dvh] w-full relative overflow-x-hidden bg-brand-bg text-gray-800 flex flex-col items-center font-sans">
             <main className="relative z-10 w-full max-w-md px-6 py-12 flex flex-col items-center min-h-[100dvh]">
                 
@@ -291,10 +300,9 @@ const MainApp: React.FC = () => {
                 </footer>
             </main>
         </div>
-    );
-};
+    )};
 
-const App: React.FC = () => {
+    const App: React.FC = () => {
     return (
         <BrowserRouter>
             <Routes>
